@@ -15,6 +15,7 @@ const render = require("./lib/htmlRenderer");
 // and to create objects for each team member (using the correct classes as blueprints!)
 const teamMembers = []
 
+const questions = () => {
 inquirer.prompt([
     {
     type: 'input',
@@ -30,12 +31,6 @@ inquirer.prompt([
     type: 'input',
     message: "What is your email?",
     name: 'email'
-    },
-    {
-    type: 'list',
-    message: "What is your role?",
-    name: 'role',
-    choices: ["Engineer", "Intern", "Manager", "done create team"]
     }
 ]).then((response)=> {
 console.log(response)
@@ -57,17 +52,40 @@ if (response.role === "Intern"){
 }
 console.log(teamMembers)
 // createTeam()
+role1()
 })
+}
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
 // generate and return a block of HTML including templated divs for each employee!
 
-fs.writeFile('./templates/main.html', render(teamMembers), (err) => {
-    if (err) throw err;
-    console.log("Team Complete.")
+const role1 = () => {
+    inquirer.prompt([
+        {
+            type: 'list',
+            message: "What is your role?",
+            name: 'role',
+            choices: ["Engineer", "Intern", "Manager", "Finished, create team!"]
+        }
+    ]).then((response)=> {
+        if(response.role === "Finished, create team!"){
+            finished()
+        }
+        else{
+            questions()
+        }
 })
+}
+
+const finished = () => {
+    fs.writeFile('./templates/main.html', render(teamMembers), (err) => {
+        if (err) throw err;
+        console.log("Team Complete.")
+})
+}
 
 render(teamMembers)
+role1()
 // After you have your html, you're now ready to create an HTML file using the HTML
 // returned from the `render` function. Now write it to a file named `team.html` in the
 // `output` folder. You can use the variable `outputPath` above target this location.

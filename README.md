@@ -1,1 +1,1 @@
-# Template
+# Team Generator

@@ -5,6 +5,7 @@ const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
 let response1;
+let response2;
 
 const OUTPUT_DIR = path.resolve(__dirname, "templates");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
@@ -17,7 +18,7 @@ const render = require("./lib/htmlRenderer");
 const teamMembers = []
 
 const questions = () => {
-    var response2 = response1
+    var responseQ = response1
 inquirer.prompt([
     {
     type: 'input',
@@ -36,19 +37,19 @@ inquirer.prompt([
     },
 ]).then((response)=> {
 console.log(response)
-if (response2 === "Engineer"){
+if (responseQ === "Engineer"){
     console.log("Engineer")
-    const engineer = new Engineer(response.name, response.id, response.email)
+    const engineer = new Engineer(response.name, response.id, response.email, response2)
     teamMembers.push(engineer)
 }
-if (response2 === "Manager"){
+if (responseQ === "Manager"){
     console.log("Manager")
-    const manager = new Manager(response.name, response.id, response.email)
+    const manager = new Manager(response.name, response.id, response.email, response2)
     teamMembers.push(manager)
 }
-if (response2 === "Intern"){
+if (responseQ === "Intern"){
     console.log("Intern")
-    const intern = new Intern(response.name, response.id, response.email)
+    const intern = new Intern(response.name, response.id, response.email, response2)
     teamMembers.push(intern)
 }
 console.log(teamMembers)
@@ -71,11 +72,58 @@ const role1 = () => {
         if(response.role === "Finished, create team!"){
             finished()
         }
-        else{
+        if(response.role === "Engineer"){
             response1 = response.role
-            questions()
+            engineer()
+        }
+        if(response.role === "Intern"){
+            response1 = response.role
+            intern()
+        }
+        if(response.role === "Manager"){
+            response1 = response.role
+            manager()
         }
 })
+}
+
+const engineer = () => {
+    inquirer.prompt([
+        {
+            type: 'input',
+            message: "What is your Github User?",
+            name: 'github'
+            }
+    ]).then((response)=> {
+        response2 = response.github
+        questions();
+    })
+}
+
+const intern = () => {
+    inquirer.prompt([
+        {
+            type: 'input',
+            message: "What school did you attend?",
+            name: 'school'
+            }
+    ]).then((response)=> {
+        response2 = response.school
+        questions();
+    })
+}
+
+const manager = () => {
+    inquirer.prompt([
+        {
+            type: 'input',
+            message: "What is your Office Number?",
+            name: 'officeNumber'
+            }
+    ]).then((response)=> {
+        response2 = response.officeNumber
+        questions();
+    })
 }
 
 const finished = () => {

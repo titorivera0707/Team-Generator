@@ -33,7 +33,7 @@ inquirer.prompt([
     type: 'input',
     message: "What is your email?",
     name: 'email'
-    }
+    },
 ]).then((response)=> {
 console.log(response)
 if (response2 === "Engineer"){
@@ -45,7 +45,6 @@ if (response2 === "Manager"){
     console.log("Manager")
     const manager = new Manager(response.name, response.id, response.email)
     teamMembers.push(manager)
-
 }
 if (response2 === "Intern"){
     console.log("Intern")

@@ -4,8 +4,9 @@ const Intern = require("./lib/Intern");
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
+let response1;
 
-const OUTPUT_DIR = path.resolve(__dirname, "output");
+const OUTPUT_DIR = path.resolve(__dirname, "templates");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
@@ -16,6 +17,7 @@ const render = require("./lib/htmlRenderer");
 const teamMembers = []
 
 const questions = () => {
+    var response2 = response1
 inquirer.prompt([
     {
     type: 'input',
@@ -34,24 +36,23 @@ inquirer.prompt([
     }
 ]).then((response)=> {
 console.log(response)
-if (response.role === "Engineer"){
+if (response2 === "Engineer"){
     console.log("Engineer")
     const engineer = new Engineer(response.name, response.id, response.email)
     teamMembers.push(engineer)
 }
-if (response.role === "Manager"){
+if (response2 === "Manager"){
     console.log("Manager")
     const manager = new Manager(response.name, response.id, response.email)
     teamMembers.push(manager)
 
 }
-if (response.role === "Intern"){
+if (response2 === "Intern"){
     console.log("Intern")
     const intern = new Intern(response.name, response.id, response.email)
     teamMembers.push(intern)
 }
 console.log(teamMembers)
-// createTeam()
 role1()
 })
 }
@@ -72,19 +73,22 @@ const role1 = () => {
             finished()
         }
         else{
+            response1 = response.role
             questions()
         }
 })
 }
 
 const finished = () => {
-    fs.writeFile('./templates/main.html', render(teamMembers), (err) => {
+    fs.writeFile(outputPath, render(teamMembers), (err) => {
         if (err) throw err;
         console.log("Team Complete.")
+
+        render(teamMembers);
 })
 }
 
-render(teamMembers)
+
 role1()
 // After you have your html, you're now ready to create an HTML file using the HTML
 // returned from the `render` function. Now write it to a file named `team.html` in the
